@@ -27,12 +27,20 @@ function setComputeParams (){
   compute.apiKey = process.env.RHINO_COMPUTE_KEY
 }
 
+router.get('/',  function(req, res, next) {
+  //res.send('Hi there')
+
+  res.sendFile( __dirname + '/index.html')
+
+})
+
+
 /**
  * Return list of definitions available on this server. The definitions
  * are located in the 'files' directory. These are the names that can be
  * used to call '/:definition_name` for details about a specific definition
  */
-router.get('/',  function(req, res, next) {
+router.get('/list',  function(req, res, next) {
   let definitions = []
   req.app.get('definitions').forEach( def => {
     definitions.push({name: def.name})
