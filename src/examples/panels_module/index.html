@@ -37,24 +37,25 @@
         <div id="container">
             <div id="overlay">
                 <div>
-                    <input type="range" id="clusters" name="clusters" min="2" max="10" value="5" step="1">
-                    <label for="clusters">Clusters</label>
-                </div>
                 <div>
-                    <input type="range" id="dimension" name="dimension" min="5" max="100" value="20" step="1">
-                    <label for="dimension">Dimension</label>
-                </div>
-                <div>
-                    <input type="range" id="resolution" name="resolution" min="5" max="30" value="20" step="1">
-                    <label for="resolution">Resolution</label>
-                </div>
-                <div>
-                    <input type="range" id="x" name="x" min="0.0" max="1.0" value="0.5" step="0.1">
+                    <input type="range" id="x" name="x" min="0" max="10" value="3" step="1">
                     <label for="x">X Position</label>
                 </div>
                 <div>
-                    <input type="range" id="y" name="y" min="0.0" max="1.0" value="0.5" step="0.1">
+                    <input type="range" id="y" name="y" min="0" max="10" value="5" step="1">
                     <label for="y">Y Position</label>
+                </div>
+                <div>
+                    <input type="range" id="z" name="z" min="0" max="10" value="3" step="1">
+                    <label for="z">Z Position</label>
+                </div>
+                <div>
+                    <input type="range" id="reduction" name="reduction" min="0" max="100" value="27" step="1">
+                    <label for="reduction">reduction</label>
+                </div>
+                <div>
+                    <input type="range" id="seed" name="seed" min="0.0" max="1.0" value="0.6" step="0.1">
+                    <label for="seed">seed</label>
                 </div>
             </div>
         </div>

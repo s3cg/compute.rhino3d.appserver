@@ -6,21 +6,22 @@ import rhino3dm from 'https://cdn.jsdelivr.net/npm/rhino3dm@0.15.0-beta/rhino3dm
 const definition = 'k_means_module_02.gh'
 
 // setup input change events
-const clusters_slider = document.getElementById( 'clusters' )
-clusters_slider.addEventListener( 'mouseup', onSliderChange, false )
-clusters_slider.addEventListener( 'touchend', onSliderChange, false )
-const dimension_slider = document.getElementById( 'dimension' )
-dimension_slider.addEventListener( 'mouseup', onSliderChange, false )
-dimension_slider.addEventListener( 'touchend', onSliderChange, false )
-const resolution_slider = document.getElementById( 'resolution' )
-resolution_slider.addEventListener( 'mouseup', onSliderChange, false )
-resolution_slider.addEventListener( 'touchend', onSliderChange, false )
 const x_slider = document.getElementById( 'x' )
 x_slider.addEventListener( 'mouseup', onSliderChange, false )
 x_slider.addEventListener( 'touchend', onSliderChange, false )
 const y_slider = document.getElementById( 'y' )
 y_slider.addEventListener( 'mouseup', onSliderChange, false )
 y_slider.addEventListener( 'touchend', onSliderChange, false )
+const z_slider = document.getElementById( 'z' )
+z_slider.addEventListener( 'mouseup', onSliderChange, false )
+z_slider.addEventListener( 'touchend', onSliderChange, false )
+const reduction_slider = document.getElementById( 'reduction' )
+reduction_slider.addEventListener( 'mouseup', onSliderChange, false )
+reduction_slider.addEventListener( 'touchend', onSliderChange, false )
+const seed_slider = document.getElementById( 'seed' )
+seed_slider.addEventListener( 'mouseup', onSliderChange, false )
+seed_slider.addEventListener( 'touchend', onSliderChange, false )
+
 
 let _threeMesh, _threeMaterial, rhino
 
@@ -41,11 +42,11 @@ async function compute(){
   const data = {
     definition: definition,
     inputs: {
-      'int_k':document.getElementById('clusters').valueAsNumber,
-      'int_dimension':document.getElementById('dimension').valueAsNumber,
-      'int_resolution':document.getElementById('resolution').valueAsNumber,
       'num_x':document.getElementById('x').valueAsNumber,
-      'num_y':document.getElementById('y').valueAsNumber  
+      'num_y':document.getElementById('y').valueAsNumber,
+      'num_z':document.getElementById('z').valueAsNumber,
+      'reduction':document.getElementById('reduction').valueAsNumber,
+      'seed':document.getElementById('reduction').valueAsNumber     
     }
   }
 

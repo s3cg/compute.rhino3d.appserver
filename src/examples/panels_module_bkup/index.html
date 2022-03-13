@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="icon" href="data:,">
+        <title>k_means_module_02.gh</title>
+        <style>
+            body {
+                margin: 0;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            canvas { width: 100%; height: 100%; }
+            input[type=range] { width: 100%; }
+            #container { position: relative; }
+            #container canvas, #overlay { position: absolute; }
+            #overlay { z-index: 1; width: 100%; }
+            #overlay div { padding: 5px; }
+            #loader {
+                border: 5px solid #f3f3f3; /* Light grey */
+                border-top: 5px solid #3d3d3d; /* Grey */
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                animation: spin 1s linear infinite;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                z-index: 2;
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="loader"></div> 
+        <div id="container">
+            <div id="overlay">
+                <div>
+                  <label for="reduction">reduction</label>
+                  <input type="range" id="reduction" min="0" max="100" value="27" step="1">
+                </div>
+                <div>
+                  <label for="num_x">num_x</label>
+                  <input type="range" id="num_x" min="0" max="10" value="3" step="1">
+                </div>
+                <div>
+                  <label for="num_y">num_y</label>
+                  <input type="range" id="num_y" min="0" max="10" value="5" step="1">
+                </div>
+                <div>
+                  <label for="seed">seed</label>
+                  <input type="range" id="seed" min="0" max="20" value="7" step="1">
+                </div>
+                <div>
+                  <label for="num_z">num_z</label>
+                  <input type="range" id="num_z" min="0" max="10" value="3" step="1">
+                </div>
+                <div>
+                  <label for="int_k">int_k</label>
+                  <input type="range" id="int_k" min="0" max="100" value="20" step="1">
+                </div>
+                <div><button id="downloadButton" disabled>Download</button></div>
+                <div><a href="k_means_module_02.gh" download="k_means_module_02.gh.html">Save source code</a></div>
+            </div>
+        </div>
+        <script type="module" src="script.js"></script>
+
+  
+    </body>
+</html>
