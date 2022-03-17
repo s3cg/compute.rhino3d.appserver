@@ -7,6 +7,7 @@ import rhino3dm from 'https://cdn.jsdelivr.net/npm/rhino3dm@0.15.0-beta/rhino3dm
 const loader = new Rhino3dmLoader()
 loader.setLibraryPath( 'https://cdn.jsdelivr.net/npm/rhino3dm@0.15.0-beta/' )
 
+
 // initialise 'data' object that will be used by compute()
 const data = {
   definition: 'k_means_module_02.gh',
@@ -25,6 +26,25 @@ rhino3dm().then(async m => {
 
 const downloadButton = document.getElementById("downloadButton")
 downloadButton.onclick = download
+
+const styles = {
+  border: 'none',
+  color: 'rgb(255, 255, 255)',
+  background: '#000000',
+  padding: '15px 32px',
+  borderRadius: '30px',
+  textAlign: 'center',
+  textDdecoration: 'none',
+  display: 'inline-block',
+  fontSize: '16px',
+  margin: '4px 2px',
+  cursor: 'pointer',
+}
+
+Object.assign(downloadButton.style, styles);
+
+
+
 
   /////////////////////////////////////////////////////////////////////////////
  //                            HELPER  FUNCTIONS                            //
@@ -46,6 +66,8 @@ function getInputs() {
         inputs[input.id] = input.valueAsNumber
         input.onmouseup = onSliderChange
         input.ontouchend = onSliderChange
+
+
         break
       case 'checkbox':
         inputs[input.id] = input.checked
@@ -54,12 +76,16 @@ function getInputs() {
       default:
         break
     }
+    
+
   }
   return inputs
 }
 
+
+
 // more globals
-let scene, camera, renderer, controls
+let scene, camera, renderer, controls, raycaster, area, kmeans_data, panels_lenght
 
 /**
  * Sets up the scene, camera, renderer, lights and controls and starts the animation
@@ -76,7 +102,15 @@ function init() {
     camera.position.set(1, -1, 1) // like perspective view
 
     // very light grey for background, like rhino
-    scene.background = new THREE.Color('whitesmoke')
+    scene.background = new THREE.Color(1, 1, 1);
+
+
+    //0xFFFFFF
+
+    const color = 0xFF0000; //white
+    const near = 7; 
+    const far = 55;
+    scene.fog = new THREE.Fog(color, near, far);
 
     // create the renderer and add it to the html
     renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -87,16 +121,29 @@ function init() {
     // add some controls to orbit the camera
     controls = new OrbitControls(camera, renderer.domElement)
 
-    // add a directional light
-    const directionalLight = new THREE.DirectionalLight( 0xffffff )
-    directionalLight.intensity = 2
-    scene.add( directionalLight )
+    
 
-    const ambientLight = new THREE.AmbientLight()
-    scene.add( ambientLight )
+    
+    // add a directional light
+    const directionalLight = new THREE.DirectionalLight(0xffffff);
+    directionalLight.position.set( 20, 0, 100 )
+    directionalLight.castShadow = true
+    directionalLight.intensity = 0.95;
+    scene.add(directionalLight);
+
+    //const ambientLight = new THREE.AmbientLight();
+    //scene.add(ambientLight);
+
+    const hemisphereLight = new THREE.HemisphereLight(0x000000, 0xFFFFFF, 0.55)
+    scene.add(hemisphereLight)
+
+    raycaster = new THREE.Raycaster()
+
 
     // handle changes in the window size
     window.addEventListener( 'resize', onWindowResize, false )
+
+    
 
     animate()
 }
@@ -134,11 +181,11 @@ function collectResults(responseJson) {
 
     const values = responseJson.values
 
+
     // clear doc
     if( doc !== undefined)
         doc.delete()
 
-    //console.log(values)
     doc = new rhino.File3dm()
 
     // for each output (RH_OUT:*)...
@@ -146,6 +193,7 @@ function collectResults(responseJson) {
       // ...iterate through data tree structure...
       for (const path in values[i].InnerTree) {
         const branch = values[i].InnerTree[path]
+        //console.log(branch)
         // ...and for each branch...
         for( let j = 0; j < branch.length; j ++) {
           // ...load rhino geometry into doc
@@ -153,9 +201,24 @@ function collectResults(responseJson) {
           if (rhinoObject !== null) {
             doc.objects().add(rhinoObject, null)
           }
+
+
+          if (values[i].ParamName == "RH_OUT:kmeans_data"){
+            kmeans_data = branch[j].data
+            }
+          
+          if (values[i].ParamName == "RH_OUT:panels_length"){
+            panels_lenght = branch[j].data
+            
+          }
+
         }
       }
     }
+
+    //Get Values
+    document.getElementById('kmeans_data').innerText = "Kmeans_data = " + kmeans_data + " m2"
+    document.getElementById('panels_length').innerText = "Panels_length = " + panels_lenght + " total_panels"
 
     if (doc.objects().count < 1) {
       console.error('No rhino objects to load!')
@@ -182,8 +245,14 @@ function collectResults(responseJson) {
             }
         })
 
+        
         // add object graph from rhino model to three.js scene
+
         scene.add( object )
+
+
+
+        
 
         // hide spinner and enable download button
         showSpinner(false)
@@ -241,6 +310,7 @@ function onSliderChange () {
  * The animation loop!
  */
 function animate() {
+
   requestAnimationFrame( animate )
   controls.update()
   renderer.render(scene, camera)
