@@ -95,7 +95,7 @@ function getInputs() {
 
 
 // more globals
-let scene, camera, renderer, controls, raycaster, kmeans_data, panels_length, cluster_length
+let scene, camera, renderer, controls, raycaster, kmeans_data, panels_length, cluster_length, a 
 
 /**
  * Sets up the scene, camera, renderer, lights and controls and starts the animation
@@ -224,18 +224,43 @@ function collectResults(responseJson) {
 
           if (values[i].ParamName == "RH_OUT:int_cluster_lengths"){
             cluster_length = branch[j].data
-            console.log(cluster_length)
+            //console.log(typeof(cluster_length))
+            //console.log(cluster_length)
+            a = new Array(cluster_length)
+
+            a = document.createElement('li')
+
+            a.innerHTML = cluster_length
+
+            //add Dom Node to list
+            document.getElementById('cluster_length').appendChild(a)
+            
+            
+            console.log(a)
+
+
+            
           }
 
+          
+
         }
+      
       }
     }
 
+  
+
+  
     //Get Values
     document.getElementById('kmeans_data').innerText = "Kmeans_data = " + kmeans_data + " m2"
     document.getElementById('panels_length').innerText = "Panels_length = " + panels_length + " total_panels"
-    document.getElementById('clusters_length').innerText = "Clusters_length = " + cluster_length + " total_length"
+    //document.getElementById('clusters_length').innerText = "Clusters_length = " + cluster_length + " total_length"
 
+    
+    
+    
+    
     if (doc.objects().count < 1) {
       console.error('No rhino objects to load!')
       showSpinner(false)
