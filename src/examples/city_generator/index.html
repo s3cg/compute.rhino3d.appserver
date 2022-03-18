@@ -1,3 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="icon" href="data:,">
+        <title>city_generator.gh</title>
+        <style>
+            body {
+                margin: 0;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            canvas { width: 100%; height: 100%; }
+            input[type=range] { width: 100%; }
+            #container { position: relative; }
+            #container canvas, #overlay { position: absolute; }
+            #overlay { z-index: 1; width: 100%; }
+            #overlay div { padding: 5px; }
+            #loader {
+                border: 5px solid #f3f3f3; /* Light grey */
+                border-top: 5px solid #3d3d3d; /* Grey */
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                animation: spin 1s linear infinite;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                z-index: 2;
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="loader"></div> 
+        <div id="container">
+            <div id="overlay">
+                <div>
+                  <label for="streets1">streets1</label>
+                  <input type="range" id="streets1" min="0" max="1000" value="392" step="1">
+                </div>
+                <div>
+                  <label for="streets2">streets2</label>
+                  <input type="range" id="streets2" min="0" max="1000" value="365" step="1">
+                </div>
+                <div>
+                  <label for="distance">distance</label>
+                  <input type="range" id="distance" min="0" max="100" value="65" step="1">
+                </div>
+                <div>
+                  <label for="linear">linear</label>
+                  <input type="range" id="linear" min="0" max="100" value="8.8" step="1">
+                </div>
+                <div>
+                  <label for="plots">plots</label>
+                  <input type="range" id="plots" min="0" max="100" value="87" step="1">
+                </div>
+
+                <div>
+                  <label for="buildings1">buildings1</label>
+                  <input type="range" id="buildings1" min="0" max="1" value="0.4" step="0.1">
+                </div>
+                <div>
+                  <label for="buildings2">buildings2</label>
+                  <input type="range" id="buildings2" min="0" max="1" value="0.7" step="0.1">
+                </div>
+
+                <div>
+                  <label for="terrain">terrain</label>
+                  <input type="range" id="terrain" min="0" max="1000" value="384" step="1">
+                </div>
+                <div><button id="downloadButton" disabled>Download</button></div>
+                <div><a href="city_generator.gh" download="city_generator.gh.html">Save source code</a></div>
+            </div>
+        </div>
+
+        <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.126.0/build/three.module.js'
 import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.126.0/examples/jsm/controls/OrbitControls.js'
 import { Rhino3dmLoader } from 'https://cdn.jsdelivr.net/npm/three@0.126.0/examples/jsm/loaders/3DMLoader.js'
@@ -7,10 +86,9 @@ import rhino3dm from 'https://cdn.jsdelivr.net/npm/rhino3dm@0.15.0-beta/rhino3dm
 const loader = new Rhino3dmLoader()
 loader.setLibraryPath( 'https://cdn.jsdelivr.net/npm/rhino3dm@0.15.0-beta/' )
 
-
 // initialise 'data' object that will be used by compute()
 const data = {
-  definition: 'k_means_module_02.gh',
+  definition: 'city_generator_02.gh',
   inputs: getInputs()
 }
 
@@ -26,35 +104,6 @@ rhino3dm().then(async m => {
 
 const downloadButton = document.getElementById("downloadButton")
 downloadButton.onclick = download
-
-var b = 0;
-downloadButton.onclick = function() {
-  //console.log(++b)
-  b += 1;
-  document.getElementById("clicks_02").innerHTML = b
-  
-}
-
-
-
-const styles = {
-  border: 'none',
-  color: 'rgb(255, 255, 255)',
-  background: '#000000',
-  padding: '15px 32px',
-  borderRadius: '30px',
-  textAlign: 'center',
-  textDdecoration: 'none',
-  display: 'inline-block',
-  fontSize: '16px',
-  margin: '4px 2px',
-  cursor: 'pointer',
-}
-
-Object.assign(downloadButton.style, styles);
-
-
-
 
   /////////////////////////////////////////////////////////////////////////////
  //                            HELPER  FUNCTIONS                            //
@@ -76,8 +125,6 @@ function getInputs() {
         inputs[input.id] = input.valueAsNumber
         input.onmouseup = onSliderChange
         input.ontouchend = onSliderChange
-
-
         break
       case 'checkbox':
         inputs[input.id] = input.checked
@@ -86,16 +133,12 @@ function getInputs() {
       default:
         break
     }
-    
-
   }
   return inputs
 }
 
-
-
 // more globals
-let scene, camera, renderer, controls, raycaster, area, kmeans_data, panels_lenght
+let scene, camera, renderer, controls
 
 /**
  * Sets up the scene, camera, renderer, lights and controls and starts the animation
@@ -112,15 +155,7 @@ function init() {
     camera.position.set(1, -1, 1) // like perspective view
 
     // very light grey for background, like rhino
-    scene.background = new THREE.Color(1, 1, 1);
-
-
-    //0xFFFFFF
-
-    const color = 0xFF0000; //white
-    const near = 7; 
-    const far = 55;
-    scene.fog = new THREE.Fog(color, near, far);
+    scene.background = new THREE.Color('whitesmoke')
 
     // create the renderer and add it to the html
     renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -131,29 +166,16 @@ function init() {
     // add some controls to orbit the camera
     controls = new OrbitControls(camera, renderer.domElement)
 
-    
-
-    
     // add a directional light
-    const directionalLight = new THREE.DirectionalLight(0xffffff);
-    directionalLight.position.set( 20, 0, 100 )
-    directionalLight.castShadow = true
-    directionalLight.intensity = 0.95;
-    scene.add(directionalLight);
+    const directionalLight = new THREE.DirectionalLight( 0xffffff )
+    directionalLight.intensity = 2
+    scene.add( directionalLight )
 
-    //const ambientLight = new THREE.AmbientLight();
-    //scene.add(ambientLight);
-
-    const hemisphereLight = new THREE.HemisphereLight(0x000000, 0xFFFFFF, 0.55)
-    scene.add(hemisphereLight)
-
-    raycaster = new THREE.Raycaster()
-
+    const ambientLight = new THREE.AmbientLight()
+    scene.add( ambientLight )
 
     // handle changes in the window size
     window.addEventListener( 'resize', onWindowResize, false )
-
-    
 
     animate()
 }
@@ -191,11 +213,11 @@ function collectResults(responseJson) {
 
     const values = responseJson.values
 
-
     // clear doc
     if( doc !== undefined)
         doc.delete()
 
+    //console.log(values)
     doc = new rhino.File3dm()
 
     // for each output (RH_OUT:*)...
@@ -203,7 +225,6 @@ function collectResults(responseJson) {
       // ...iterate through data tree structure...
       for (const path in values[i].InnerTree) {
         const branch = values[i].InnerTree[path]
-        //console.log(branch)
         // ...and for each branch...
         for( let j = 0; j < branch.length; j ++) {
           // ...load rhino geometry into doc
@@ -211,24 +232,9 @@ function collectResults(responseJson) {
           if (rhinoObject !== null) {
             doc.objects().add(rhinoObject, null)
           }
-
-
-          if (values[i].ParamName == "RH_OUT:kmeans_data"){
-            kmeans_data = branch[j].data
-            }
-          
-          if (values[i].ParamName == "RH_OUT:panels_length"){
-            panels_lenght = branch[j].data
-            
-          }
-
         }
       }
     }
-
-    //Get Values
-    document.getElementById('kmeans_data').innerText = "Kmeans_data = " + kmeans_data + " m2"
-    document.getElementById('panels_length').innerText = "Panels_length = " + panels_lenght + " total_panels"
 
     if (doc.objects().count < 1) {
       console.error('No rhino objects to load!')
@@ -255,14 +261,8 @@ function collectResults(responseJson) {
             }
         })
 
-        
         // add object graph from rhino model to three.js scene
-
         scene.add( object )
-
-
-
-        
 
         // hide spinner and enable download button
         showSpinner(false)
@@ -320,7 +320,6 @@ function onSliderChange () {
  * The animation loop!
  */
 function animate() {
-
   requestAnimationFrame( animate )
   controls.update()
   renderer.render(scene, camera)
@@ -397,3 +396,6 @@ function showSpinner(enable) {
   else
     document.getElementById('loader').style.display = 'none'
 }
+        </script>
+    </body>
+</html>
