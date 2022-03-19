@@ -3,6 +3,8 @@ import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.126.0/exampl
 import { Rhino3dmLoader } from 'https://cdn.jsdelivr.net/npm/three@0.126.0/examples/jsm/loaders/3DMLoader.js'
 import rhino3dm from 'https://cdn.jsdelivr.net/npm/rhino3dm@0.15.0-beta/rhino3dm.module.js'
 
+//import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.126.0/examples/jsm/loaders/GLTFLoader.js";
+
 // set up loader for converting the results to threejs
 const loader = new Rhino3dmLoader()
 loader.setLibraryPath( 'https://cdn.jsdelivr.net/npm/rhino3dm@0.15.0-beta/' )
@@ -95,7 +97,7 @@ function getInputs() {
 
 
 // more globals
-let scene, camera, renderer, controls, raycaster, kmeans_data, panels_length, cluster_length, arra_a 
+let scene, camera, renderer, controls, raycaster, kmeans_data, panels_length, cluster_length, arr_a, myArray
 
 /**
  * Sets up the scene, camera, renderer, lights and controls and starts the animation
@@ -134,6 +136,7 @@ function init() {
 
     // add some controls to orbit the camera
     controls = new OrbitControls(camera, renderer.domElement)
+    controls.enableDamping = true
 
     
 
@@ -197,12 +200,16 @@ async function compute() {
   }
 }
 
+
+
 /**
  * Parse response
  */
 function collectResults(responseJson) {
 
     const values = responseJson.values
+
+    var arr_a = []
 
 
 
@@ -212,7 +219,7 @@ function collectResults(responseJson) {
 
     doc = new rhino.File3dm()
 
-    var arr_a = []
+    
 
     // for each output (RH_OUT:*)...
     for ( let i = 0; i < values.length; i ++ ) {
@@ -257,30 +264,22 @@ function collectResults(responseJson) {
       }
     }
 
-    
 
-    console.log(arr_a)
 
-    //arr_a = document.createElement('li')
     //console.log(arr_a)
+    //console.log(typeof(arr_a))
 
-    //console.log(arra_a)
-    //a.innerHTML = cluster_length
-    //add Dom Node to list
-    //document.getElementById('cluster_length').appendChild(a)
+    myArray = arr_a
 
-  
-
-  
+    
     //Get Values
     document.getElementById('kmeans_data').innerText = "Kmeans_data = " + kmeans_data + " m2"
     document.getElementById('panels_length').innerText = "Panels_length = " + panels_length + " total_panels"
-    //document.getElementById('clusters_length').innerText = "Clusters_length = " + cluster_length + " total_length"
+    document.getElementById('data_test').innerText = myArray
 
     
-    
-    
-    
+
+
     if (doc.objects().count < 1) {
       console.error('No rhino objects to load!')
       showSpinner(false)
@@ -335,6 +334,9 @@ function collectResults(responseJson) {
         // add object graph from rhino model to three.js scene
 
         scene.add( object )
+
+        
+        
 
 
 
@@ -399,6 +401,8 @@ function animate() {
 
   requestAnimationFrame( animate )
   controls.update()
+
+
   renderer.render(scene, camera)
 }
 
