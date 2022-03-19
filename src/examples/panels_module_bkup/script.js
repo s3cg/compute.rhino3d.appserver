@@ -95,7 +95,7 @@ function getInputs() {
 
 
 // more globals
-let scene, camera, renderer, controls, raycaster, kmeans_data, panels_length, cluster_length, a 
+let scene, camera, renderer, controls, raycaster, kmeans_data, panels_length, cluster_length, arra_a 
 
 /**
  * Sets up the scene, camera, renderer, lights and controls and starts the animation
@@ -112,14 +112,18 @@ function init() {
     camera.position.set(1, -1, 1) // like perspective view
 
     // very light grey for background, like rhino
-    scene.background = new THREE.Color(1, 1, 1);
+    scene.background = new THREE.Color(0, 0, 0);
+
+    
 
 
     //0xFFFFFF
+    //0xFF0000
+    //0x000000
 
-    const color = 0xFF0000; //white
+    const color = 0x000000; 
     const near = 7; 
-    const far = 55;
+    const far = 50;
     scene.fog = new THREE.Fog(color, near, far);
 
     // create the renderer and add it to the html
@@ -141,11 +145,20 @@ function init() {
     directionalLight.intensity = 0.95;
     scene.add(directionalLight);
 
+
+    const directionalLight_b = new THREE.DirectionalLight(0x990000);
+    directionalLight_b.position.set( 40, 0, 100 )
+    directionalLight_b.castShadow = true
+    directionalLight_b.intensity = 0.99;
+    scene.add(directionalLight_b);
+
     //const ambientLight = new THREE.AmbientLight();
     //scene.add(ambientLight);
 
     const hemisphereLight = new THREE.HemisphereLight(0x000000, 0xFFFFFF, 0.55)
     scene.add(hemisphereLight)
+
+    
 
     raycaster = new THREE.Raycaster()
 
@@ -192,11 +205,14 @@ function collectResults(responseJson) {
     const values = responseJson.values
 
 
+
     // clear doc
     if( doc !== undefined)
         doc.delete()
 
     doc = new rhino.File3dm()
+
+    var arr_a = []
 
     // for each output (RH_OUT:*)...
     for ( let i = 0; i < values.length; i ++ ) {
@@ -224,22 +240,14 @@ function collectResults(responseJson) {
 
           if (values[i].ParamName == "RH_OUT:int_cluster_lengths"){
             cluster_length = branch[j].data
+
+            arr_a.push(cluster_length);
             //console.log(typeof(cluster_length))
             //console.log(cluster_length)
-            a = new Array(cluster_length)
+            //a = new Array(cluster_length)
 
-            a = document.createElement('li')
-
-            a.innerHTML = cluster_length
-
-            //add Dom Node to list
-            document.getElementById('cluster_length').appendChild(a)
-            
-            
-            console.log(a)
-
-
-            
+            //a = document.createElement('li')
+            //console.log(a)
           }
 
           
@@ -248,6 +256,18 @@ function collectResults(responseJson) {
       
       }
     }
+
+    
+
+    console.log(arr_a)
+
+    //arr_a = document.createElement('li')
+    //console.log(arr_a)
+
+    //console.log(arra_a)
+    //a.innerHTML = cluster_length
+    //add Dom Node to list
+    //document.getElementById('cluster_length').appendChild(a)
 
   
 
@@ -278,6 +298,31 @@ function collectResults(responseJson) {
             child.material = new THREE.MeshNormalMaterial()
         }, false)
         */
+
+        object.traverse((child)=>
+        {
+          if(child.isMesh){
+            //console.log('ok')
+            if (child.userData.attributes.geometry.userStringCount > 0){
+              //console.log('ok')
+              const col = child.userData.attributes.geometry.userStrings[0][1];
+              const threeColor = new THREE.Color("rgb(" + col + ")");
+              //console.log(threeColor);
+
+              let sphere_Material = new THREE.MeshPhysicalMaterial({color: "black",  clearcoat: 1.0,
+                clearcoatRoughness:0.1,
+                metalness: 0.5,
+                roughness:0.5,  ior: 2.5,  transparent: true, opacity: 0.95,});
+                child.material = sphere_Material;
+                //console.log(child)
+
+                //let mat = new THREE.MeshStandardMaterial({color: "red", emissive: "black", emissiveIntensity: 5.0, roughness: 0.50, metalness: 0.40})
+                //child.material = mat;
+
+            
+            }
+          }
+        })
 
         // clear objects from scene. do this here to avoid blink
         scene.traverse(child => {
