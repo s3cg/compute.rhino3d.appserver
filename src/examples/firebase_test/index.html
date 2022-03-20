@@ -4,38 +4,17 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Read, Write, Update, Delete</title>
     
 
 </head>
+
 <body>
 
-    <div id="container">
-
-        <div id="title_container">
-
-            <div id="form_container">
-                <input placeholder="Email" type="email" id="email"/>
-                <input placeholder="Password" type="password" id="password"/>
-                <input placeholder="Username" type="username" id="username"/>
-                <input placeholder="Say something" type="text" id="text"/>
-                <input placeholder="Favorite" type="text" id="favorite"/>
-        
-            </div>
-
-            <div  id="button_container">
-                <button id="submit" onclick="save()">SUBMIT</button>
-            </div>
-      </div>
-    </div>
-
-    
-</body>
-
-<script> src = "https://www.gstatic.com/firebasejs/9.6.9/firebase-app.js"; </script>
-    <script> src = "https://www.gstatic.com/firebasejs/9.6.9/firebase-database.js"; </script>
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-app.js";
+        import { getDatabase }  from "https://www.gstatic.com/firebasejs/9.6.9/firebase-database.js";
         // TODO: Add SDKs for Firebase products that you want to use
         // https://firebase.google.com/docs/web/setup#available-libraries
       
@@ -43,16 +22,18 @@
         const firebaseConfig = {
           apiKey: "AIzaSyBrcprj6HQuuxaRQk3QN3xix3J-Ecct-7I",
           authDomain: "updatebimsc.firebaseapp.com",
+          databaseURL: "https://updatebimsc-default-rtdb.firebaseio.com",
           projectId: "updatebimsc",
           storageBucket: "updatebimsc.appspot.com",
           messagingSenderId: "1009229988981",
-          appId: "1:1009229988981:web:fafe21f6f2be6b500ea43c"
+          appId: "1:1009229988981:web:b7b2c33f8dcfcb7c0ea43c"
         };
       
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-
-        
       </script>
-    <title>Document</title>
+
+    
+</body>
+
 </html>
