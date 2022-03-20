@@ -174,6 +174,10 @@ function init() {
     animate()
 }
 
+
+
+
+
 /**
  * Call appserver
  */
@@ -269,13 +273,17 @@ function collectResults(responseJson) {
     //console.log(arr_a)
     //console.log(typeof(arr_a))
 
-    myArray = arr_a
+    const myArray = arr_a
 
     
     //Get Values
     document.getElementById('kmeans_data').innerText = "Kmeans_data = " + kmeans_data + " m2"
     document.getElementById('panels_length').innerText = "Panels_length = " + panels_length + " total_panels"
-    document.getElementById('data_test').innerText = myArray
+    //document.getElementById('data_test').innerText = myArray
+    document.getElementsByClassName('data_test').innerText = myArray
+
+    
+
 
     
 
