@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="icon" href="data:,">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
+        <title>web_app_main_Neil00.gh</title>
+        <style>
+            body { margin: 0; font-family: 'Open Sans', sans-serif; background-color: #000000; color: rgb(255, 255, 255);}
+            canvas { width: 100%; height: 100%; }
+            input[type=range] { width: 100%; }
+            #container { position: relative; }
+            #container canvas, #overlay { position: absolute; }
+            #overlay { z-index: 1; width: 20%; padding: 10px}
+            #overlay div { padding: 5px; }
+            #loader {
+                border: 1px solid #f3f3f3; /* Light grey */
+                border-top: 1px solid #3d3d3d; /* Grey */
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                animation: spin 1s linear infinite;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                z-index: 2;
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+
+            button {
+                border: none;
+                color: rgb(255, 255, 255);
+                background: #000000;
+                padding: 15px 32px;
+                border-radius: 30px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 4px 2px;
+                cursor: pointer;
+            }
+
+            input[type=range]{
+                    -webkit-appearance: none;
+                    width: 100%;
+                    height: 1px;
+                    background: #d3d3d3;
+                    outline: none;
+                    opacity: 0.7;
+                    -webkit-transition: .2s;
+                    transition: opacity .2s;
+              }
+
+            input[type=range]{
+                  opacity: 1;
+            }
+
+            input[type=range]::-webkit-slider-thumb{
+                    -webkit-appearance: none;
+                    appearance: none;
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 100px;
+                    background: #ffffff;
+                    cursor: pointer;
+
+            }
+
+
+
+        </style>
+    </head>
+    <body>
+        <div id="loader"></div> 
+        <div id="container">
+
+          <script>
+            var TxtRotate = function(el, toRotate, period) {
+            this.toRotate = toRotate;
+            this.el = el;
+            this.loopNum = 0;
+            this.period = parseInt(period, 10) || 2000;
+            this.txt = '';
+            this.tick();
+            this.isDeleting = false;
+            };
+
+            TxtRotate.prototype.tick = function() {
+            var i = this.loopNum % this.toRotate.length;
+            var fullTxt = this.toRotate[i];
+
+          if (this.isDeleting) {
+          this.txt = fullTxt.substring(0, this.txt.length - 1);
+            } else {
+          this.txt = fullTxt.substring(0, this.txt.length + 1);
+          }
+
+        this.el.innerHTML = '<span class="wrap">'+this.txt+'</span>';
+
+        var that = this;
+        var delta = 100 - Math.random() * 100;
+
+        if (this.isDeleting) { delta /= 2; }
+
+        if (!this.isDeleting && this.txt === fullTxt) {
+        delta = this.period;
+        this.isDeleting = true;
+        } else if (this.isDeleting && this.txt === '') {
+        this.isDeleting = false;
+        this.loopNum++;
+        delta = 500;
+        }
+
+
+  
+
+      setTimeout(function() {
+      that.tick();
+      }, delta);
+    };
+
+      window.onload = function() {
+      var elements = document.getElementsByClassName('txt-rotate');
+      for (var i=0; i<elements.length; i++) {
+      var toRotate = elements[i].getAttribute('data-rotate');
+      var period = elements[i].getAttribute('data-period');
+      if (toRotate) {
+      new TxtRotate(elements[i], JSON.parse(toRotate), period);
+      }
+    }
+  // INJECT CSS
+    var css = document.createElement("style");
+    css.type = "text/css";
+    css.innerHTML = ".txt-rotate > .wrap { border-right: 0.08em solid #666 }";
+    document.body.appendChild(css);
+    };
+          </script>
+
+
+          <h1>LEO ISS
+            <span
+                        class="txt-rotate"
+                        data-period="3000"
+                        data-rotate='[ "Living", "Recreation", "Infrastructure", "Working"]'>
+                    </span>
+          </h1>
+
+
+
+
+            <div id="overlay">
+                <div>
+                  <label for="Population">Population</label>
+                  <input type="range" id="Population" min="1" max="1000" value="300" step="1">
+                </div>
+                <div>
+                  <label for="Recompute">Recompute</label>
+                  <input type="checkbox" id="Recompute" >
+                </div>
+                <div>
+                  <label for="Living Octa 1">Living Octa 1</label>
+                  <input type="range" id="Living Octa 1" min="1" max="50" value="10" step="1">
+                </div>
+                <div>
+                  <label for="Living Octa 2">Living Octa 2</label>
+                  <input type="range" id="Living Octa 2" min="1" max="50" value="2" step="1">
+                </div>
+                <div>
+                  <label for="Living Octa 3">Living Octa 3</label>
+                  <input type="range" id="Living Octa 3" min="1" max="50" value="3" step="1">
+                </div>
+                <div>
+                  <label for="Sport Rec">Sport Rec</label>
+                  <input type="range" id="Sport Rec" min="1" max="50" value="10" step="1">
+                </div>
+                <div>
+                  <label for="Greenhouse">Greenhouse</label>
+                  <input type="range" id="Greenhouse" min="1" max="50" value="15" step="1">
+                </div>
+                <div>
+                  <label for="Working">Working</label>
+                  <input type="range" id="Working" min="1" max="50" value="10" step="1">
+                </div>
+                <div>
+                  <label for="Antennae">Antennae</label>
+                  <input type="range" id="Antennae" min="1" max="50" value="8" step="1">
+                </div>
+                <div>
+                  <label for="Connectors">Connectors</label>
+                  <input type="range" id="Connectors" min="1" max="50" value="15" step="1">
+                </div>
+                <div><button id="downloadButton" disabled>Download</button></div>
+                <div><a href="web_app_main_Neil00.gh" download="web_app_main_Neil00.gh.html">Save source code</a></div>
+            </div>
+        </div>
+
+        <script type="module" src="script.js"></script>
+    </body>
+</html>
