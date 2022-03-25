@@ -7,6 +7,8 @@
         <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <title>k_means_module_02.gh</title>
+        <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-database.js"></script>
         <style>
             body { margin: 0; font-family: 'Open Sans', sans-serif; background-color: #000000; color: rgb(255, 255, 255);}
             canvas { width: 100%; height: 100%; }
@@ -214,9 +216,44 @@
                 <a href="index_01.html" target="_blank"><button type="button" onclick="onClick()">Click me</button></a>
                 </div>
 
+                <input type="text" name="users">
+                <button id="send">Send</button>
+                <script>
+
+                  var firebaseConfig = {
+                  apiKey: "AIzaSyBf62OP2p6dxcdu7NAwQ3lbOG-ZJFd8WWw",
+                  authDomain: "demosample-cfe6d.firebaseapp.com",
+                  // The value of `databaseURL` depends on the location of the database
+                  databaseURL: "https://demosample-cfe6d-default-rtdb.firebaseio.com/",
+                  projectId: "demosample-cfe6d",
+                  storageBucket: "demosample-cfe6d.appspot.com",
+                  messagingSenderId: "1019664295469",
+                  appId: "1:1019664295469:web:debd21412c9cc3809f7aa4",
+                  // For Firebase JavaScript SDK v7.20.0 and later, `measurementId` is an optional field
+                };
+
+                  firebase.initializeApp(firebaseConfig);
+
+
+
+
+
+                  var firebaseRef = firebase.database().ref('users');
+                    document.querySelector('#send').addEventListener('click', ()=>{
+                  //const email =  document.getElementById('users').value; "hey_hello"
+
+                    const users = "users_experience"
+                    console.log(users)
+
+                    firebaseRef.push(users)
+                  })
+
+                </script>
+
                 <div id="kmeans_data" style= "color:#ffffff ; background-color: #020000; opacity: 0.75;"></div>
                 <div id="panels_length" style= "color:#ffffff ; background-color: #000000; opacity: 0.75;"></div>
                 <span class="data_test" style= "color:#ffffff ; background-color: #000000; opacity: 0.75;"></span>
+
                 
                 
                 <div id="chart" style= "color:#ffffff ; background-color: none;opacity: 0.75;">
