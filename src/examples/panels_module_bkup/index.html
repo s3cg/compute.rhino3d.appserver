@@ -242,7 +242,12 @@
                     document.querySelector('#send').addEventListener('click', ()=>{
                   //const email =  document.getElementById('users').value; "hey_hello"
 
-                    const users = "users_experience"
+                    const users = {
+                          student: 'Salvador',
+                          Program: 25,
+                          email: 'sal@io.net'
+                          }
+
                     console.log(users)
 
                     firebaseRef.push(users)
